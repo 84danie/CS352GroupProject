@@ -31,7 +31,7 @@ def display(state):
             else:
                 print(" -","  ",end="")
         print("\n")
-        c
+        
 def isValid(piece):
     if piece[ROW] < 0 or piece[ROW] >= n:
         return False
