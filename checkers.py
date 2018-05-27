@@ -1,5 +1,5 @@
 from copy import deepcopy
-from kinter import *
+import tkinter as tk
 
 #Displays a board and all current pieces
 def display(state):
@@ -255,12 +255,24 @@ class Board:
         if piece.color == 'B' and i == 0:
             piece.kingMe()
 
-class UI:
+class UI(tk.Frame):
 
-    def initialize():
-        
+    def __init__(self, master=None):
+        tk.Frame.__init__(self, master)
+        self.grid()
+        self.createWidgets()
+
+    def createWidgets(self):
+        for x in range(8):
+            for y in range(8):
+                quitButton = tk.Button(self, text = str(baseBoard[x][y]), command = self.quit)
+                quitButton.grid(column=x, row=y)
+    def changePLACES(self):
+        #uwu = children
+
 
 test = Board()
+guitest = UI()
 # test.display()
 # print(test.whitePieces)
 # print(test.blackPieces)
@@ -279,6 +291,8 @@ test = Board()
 # test.blackPieces[0].kingMe()
 # test.move(test.blackPieces[1],5,0)
 test.display()
+guitest.master.title('Uwu')
+guitest.mainloop()
 
 moves = test.getChildren()
 for move in moves:
