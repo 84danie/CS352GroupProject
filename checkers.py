@@ -1,4 +1,5 @@
 from copy import deepcopy
+from kinter import *
 
 #Displays a board and all current pieces
 def display(state):
@@ -137,7 +138,7 @@ initialState = [baseBoard, whitePieces, blackPieces]
 #Display the initial board
 # display(initialState)
 
-
+#JORGE START HERE
 class Piece:
     def __init__(self, color, i, j):
         self.i = i
@@ -254,7 +255,10 @@ class Board:
         if piece.color == 'B' and i == 0:
             piece.kingMe()
 
+class UI:
 
+    def initialize():
+        
 
 test = Board()
 # test.display()
