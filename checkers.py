@@ -262,6 +262,14 @@ class UI(tk.Frame):
     #    tk.Frame.__init__(self, master)
     #    self.grid()
 
+    def printHOHO():
+        print("HOHO!")
+
+    def printHEHE():
+        print("HEHE!")
+
+    def printSK():
+        print("SKWUMP!")
 
     def createWidgets(self, board):
         blackPiece = tk.PhotoImage(file="black.gif")
@@ -271,18 +279,20 @@ class UI(tk.Frame):
         self.grid()
         for x in range(8):
             for y in range(8):
-                if(isinstance(board.baseBoard[x][y], Piece)):
+                if(isinstance(board.baseBoard[y][x], Piece)):
                     if(board.baseBoard[y][x].color == "W"):
-                        quitButton = tk.Button(self, image = redPiece, command = self.quit)
+                        quitButton = tk.Button(self, image = redPiece, command=printHOHO)
                         quitButton.image = redPiece
                     else:
-                    #(board.baseBoard[y][x].color == 'B'):
-                        quitButton = tk.Button(self, image = blackPiece, command = self.quit)
+                        quitButton = tk.Button(self, image = blackPiece, command=printHEHE)
                         quitButton.image = blackPiece
                 else:
-                    quitButton = tk.Button(self, image = emptySpot, command = self.quit)
+                    quitButton = tk.Button(self, image = emptySpot, command=printSK)
                     quitButton.image = emptySpot
                 quitButton.grid(column=x, row=y, sticky="wens")
+
+
+    
     #def changePLACES(self):
      #   uwu = children
 
