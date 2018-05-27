@@ -262,13 +262,13 @@ class UI(tk.Frame):
         self.grid()
         self.createWidgets()
 
-    def createWidgets(self):
+    def createWidgets(self, board):
         for x in range(8):
             for y in range(8):
-                quitButton = tk.Button(self, text = str(baseBoard[x][y]), command = self.quit)
+                quitButton = tk.Button(self, text = Board.baseBoard[x][y], command = self.quit)
                 quitButton.grid(column=x, row=y)
-    def changePLACES(self):
-        #uwu = children
+    #def changePLACES(self):
+     #   uwu = children
 
 
 test = Board()
