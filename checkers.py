@@ -204,6 +204,24 @@ class Board:
         newJ = piece.j + j
         if newI>7 or newI<0 or newJ>7 or newJ<0:
             return []
+        if self.validAttack(piece,i,j):
+            clone = deepcopy(self)
+            arr = clone.whitePieces if piece.color == 'W' else clone.blackPieces
+            index = arr.index(piece)
+            p = arr[index]
+            if p.king:
+                clone.attack(p,i,j)
+                moves = []
+                for pair in [[1,-1],[1,1],[-1,-1],[-1,1]]:
+                    moves += self.nextBoard(p,pair[0],pair[1])
+                if(len(moves)==0):
+                    moves.append(clone)
+                return moves
+            else:
+                clone.attack(p,i,j)
+                while(clone.validAttack(p, i, j)):
+                    clone.attack(p,i,j)
+            return [clone]
         if self.baseBoard[newI][newJ] == '-':
             clone = deepcopy(self)
             arr = clone.whitePieces if piece.color == 'W' else clone.blackPieces
@@ -211,20 +229,7 @@ class Board:
             p = arr[index]
             clone.move(p,newI,newJ)
             return [clone]
-        if self.validAttack(piece,i,j):
-            clone = deepcopy(self)
-            arr = clone.whitePieces if piece.color == 'W' else clone.blackPieces
-            index = arr.index(piece)
-            p = arr[index]
-            if p.king:
-                pass
-            else:
-                clone.attack(p,i,j)
-                while(clone.validAttack(p, i, j)):
-                    clone.attack(p,i,j)
-            return [clone]
-        else:
-            return []
+        return []
     
     def attack (self,piece,i,j):
         deli = piece.i + i
@@ -248,10 +253,10 @@ class Board:
         self.baseBoard[piece.i][piece.j], self.baseBoard[i][j] = self.baseBoard[i][j], self.baseBoard[piece.i][piece.j]
         piece.i = i
         piece.j = j
-        # if piece.color == 'W' and i == 7:
-            # piece.kingMe()
-        # if piece.color == 'B' and i == 0:
-            # piece.kingMe()
+        if piece.color == 'W' and i == 7:
+            piece.kingMe()
+        if piece.color == 'B' and i == 0:
+            piece.kingMe()
 
 
 
@@ -266,11 +271,11 @@ test = Board()
 # print(test.whitePieces[0].opposite(test.whitePieces[0]))
 white = test.whitePieces[10]
 black = test.blackPieces[0]
-test.move(white,3,4)
-test.move(black,4,3)
-test.move(test.whitePieces[3],0,6)
-test.move(test.blackPieces[8],6,0)
-test.move(test.blackPieces[1],5,0)
+# test.move(white,3,4)
+# test.move(black,4,3)
+# test.move(test.whitePieces[3],0,6)
+# test.move(test.blackPieces[8],6,0)
+# test.move(test.blackPieces[1],5,0)
 test.display()
 
 moves = test.getChildren()
