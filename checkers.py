@@ -1,5 +1,5 @@
 from copy import deepcopy
-from kinter import *
+# from kinter import *
 
 #Displays a board and all current pieces
 def display(state):
@@ -82,23 +82,24 @@ def heuristic(node):
 #since checkers is a zero-sum game, the max player's
 #cost is equal to the negation of the min player's cost
 def miniMax(node, depth, maxPlayer, h):
-    if depth == 0 or getChildren(node) is None:
-        return h(node[0]),node
-
+    if depth == 0 or not node.getChildren(node):
+        return h(node),node
     bestMove = None
     if maxPlayer == True:
         bestValue = -10000000000
-        for child in getChildren(node):
-            v = miniMax(child,depth-1,False)
-            bestValue = max(bestValue,v)
-            bestMove = child
+        for child in node.getChildren(node, "B"):
+            (newVal, move) = miniMax(child,depth-1,False,h)
+            if newVal > bestValue:
+                bestValue = newVal
+                bestMove = child
         return bestValue, bestMove
     else:
         bestValue = 10000000000
-        for child in getChildren(node):
-            v = miniMax(child,depth-1,False)
-            bestValue = min(bestValue,v)
-            bestMove = child
+        for child in node.getChildren(node):
+            (newVal, move) = miniMax(child,depth-1,False,h)
+            if newVal < bestValue:
+                bestValue = newVal
+                bestMove = child
         return bestValue, bestMove
 
 
@@ -182,12 +183,14 @@ class Board:
             print('')
         print('\n')
 
-    def getChildren(self):
+    def getChildren(self, which="W"):
         moves = []
-        for piece in self.whitePieces:
-            moves += self.findMoves(piece)
-        for piece in self.blackPieces:
-            moves += self.findMoves(piece)
+        if which == "W":
+            for piece in self.whitePieces:
+                moves += self.findMoves(piece)
+        else:
+            for piece in self.blackPieces:
+                moves += self.findMoves(piece)
         return moves
 
     def findMoves(self,piece):
@@ -238,8 +241,8 @@ class Board:
         del arr[index]
 
     def validAttack(self,piece,i,j):
-        newI = piece.i + i
-        newJ = piece.j + j
+        newI = piece.i + i*2
+        newJ = piece.j + j*2
         if newI>7 or newI<0 or newJ>7 or newJ<0:
             return False
         if piece.opposite(self.baseBoard[piece.i + i][piece.j + j]):
@@ -258,7 +261,7 @@ class Board:
 class UI:
 
     def initialize():
-        
+        pass
 
 test = Board()
 # test.display()
@@ -280,9 +283,12 @@ test = Board()
 # test.move(test.blackPieces[1],5,0)
 test.display()
 
-moves = test.getChildren()
-for move in moves:
-    move.display()
+(val, test2) = miniMax(test, 3, False, lambda x: 1)
+test2.display()
+
+# moves = test.getChildren()
+# for move in moves:
+#     move.display()
 # test.display()
 # test.display()
 # moves = test.getChildren(test.whitePieces[10])
