@@ -181,9 +181,13 @@ class Board:
             print('')
         print('\n')
 
-    def getChildren(self, piece):
+    def getChildren(self):
         moves = []
-        return self.findMoves(self,piece)
+        for piece in self.whitePieces:
+            moves += self.findMoves(piece)
+        for piece in self.blackPieces:
+            moves += self.findMoves(piece)
+        return moves
 
     def findMoves(self,piece):
         moves = []
@@ -212,12 +216,16 @@ class Board:
             arr = clone.whitePieces if piece.color == 'W' else clone.blackPieces
             index = arr.index(piece)
             p = arr[index]
-            clone.attack(p,i,j)
-            while(clone.validAttack(p, i, j)):
+            if p.king:
+                pass
+            else:
                 clone.attack(p,i,j)
+                while(clone.validAttack(p, i, j)):
+                    clone.attack(p,i,j)
             return [clone]
         else:
             return []
+    
     def attack (self,piece,i,j):
         deli = piece.i + i
         delj = piece.j + j
@@ -235,16 +243,20 @@ class Board:
         if piece.opposite(self.baseBoard[piece.i + i][piece.j + j]):
             return self.baseBoard[piece.i + (i*2)][piece.j + (j*2)] == '-'
         return False
+    
     def move(self,piece,i,j):
         self.baseBoard[piece.i][piece.j], self.baseBoard[i][j] = self.baseBoard[i][j], self.baseBoard[piece.i][piece.j]
         piece.i = i
         piece.j = j
-        
+        # if piece.color == 'W' and i == 7:
+            # piece.kingMe()
+        # if piece.color == 'B' and i == 0:
+            # piece.kingMe()
 
 
 
 test = Board()
-test.display()
+# test.display()
 # print(test.whitePieces)
 # print(test.blackPieces)
 
@@ -256,11 +268,12 @@ white = test.whitePieces[10]
 black = test.blackPieces[0]
 test.move(white,3,4)
 test.move(black,4,3)
+test.move(test.whitePieces[3],0,6)
 test.move(test.blackPieces[8],6,0)
 test.move(test.blackPieces[1],5,0)
 test.display()
 
-moves = test.nextBoard(white,1,-1)
+moves = test.getChildren()
 for move in moves:
     move.display()
 # test.display()
