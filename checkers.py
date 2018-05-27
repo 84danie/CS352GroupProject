@@ -256,17 +256,33 @@ class Board:
             piece.kingMe()
 
 class UI(tk.Frame):
+    master = tk.Tk()
+    
+    #def __init__(self, master=None):
+    #    tk.Frame.__init__(self, master)
+    #    self.grid()
 
-    def __init__(self, master=None):
-        tk.Frame.__init__(self, master)
-        self.grid()
-        self.createWidgets()
 
     def createWidgets(self, board):
+        blackPiece = tk.PhotoImage(file="black.gif")
+        redPiece = tk.PhotoImage(file="red.gif")
+        emptySpot = tk.PhotoImage(file = "empty.gif")
+        frame = tk.Frame
+        self.grid()
         for x in range(8):
             for y in range(8):
-                quitButton = tk.Button(self, text = Board.baseBoard[x][y], command = self.quit)
-                quitButton.grid(column=x, row=y)
+                if(isinstance(board.baseBoard[x][y], Piece)):
+                    if(board.baseBoard[y][x].color == "W"):
+                        quitButton = tk.Button(self, image = redPiece, command = self.quit)
+                        quitButton.image = redPiece
+                    else:
+                    #(board.baseBoard[y][x].color == 'B'):
+                        quitButton = tk.Button(self, image = blackPiece, command = self.quit)
+                        quitButton.image = blackPiece
+                else:
+                    quitButton = tk.Button(self, image = emptySpot, command = self.quit)
+                    quitButton.image = emptySpot
+                quitButton.grid(column=x, row=y, sticky="wens")
     #def changePLACES(self):
      #   uwu = children
 
@@ -292,7 +308,8 @@ guitest = UI()
 # test.move(test.blackPieces[1],5,0)
 test.display()
 guitest.master.title('Uwu')
-guitest.mainloop()
+#guitest.mainloop()
+guitest.createWidgets(test)
 
 moves = test.getChildren()
 for move in moves:
