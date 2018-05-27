@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 #Displays a board and all current pieces
 def display(state):
     w = 0
@@ -133,4 +135,142 @@ blackPieces = sorted(list(map(lambda x: [n-x[ROW]-1,n-x[COL]-1,P,BLACK],whitePie
 initialState = [baseBoard, whitePieces, blackPieces]
 
 #Display the initial board
-display(initialState)
+# display(initialState)
+
+
+class Piece:
+    def __init__(self, color, i, j):
+        self.i = i
+        self.j = j
+        self.color = color
+        self.king = False
+    def kingMe(self):
+        self.king = True
+    def __str__(self):
+        return self.color
+    def opposite(self, compare):
+        if isinstance(compare,Piece):
+            return self.color != compare.color
+        return False
+    def __eq__(self, other):
+        if isinstance(other,Piece):
+            return self.i == other.i and self.j == other.j
+        return False
+
+class Board:
+    def __init__(self):
+        n = 8
+        self.baseBoard = []
+        self.whitePieces = []
+        self.blackPieces = []
+        for i in range(n):
+            self.baseBoard.append(['-'] * n)
+            for j in range(n):
+                if (i+j) % 2 == 1 and len(self.whitePieces) < 12:
+                    self.baseBoard[i][j] = Piece('W',i,j)
+                    self.whitePieces.append(self.baseBoard[i][j])
+                if (n-i) < 4 and (i+j) % 2 == 1:
+                    self.baseBoard[i][j] = Piece('B',i,j)
+                    self.blackPieces.append(self.baseBoard[i][j])
+
+    def display(self):
+        for i in range(len(self.baseBoard)):
+            for j in range(len(self.baseBoard[i])):
+                print(self.baseBoard[i][j], end="")
+                print(" ", end='')
+            print('')
+        print('\n')
+
+    def getChildren(self, piece):
+        moves = []
+        return self.findMoves(self,piece)
+
+    def findMoves(self,piece):
+        moves = []
+        if piece.color == 'W' or piece.king:
+            moves += self.nextBoard(piece,1,1)
+            moves += self.nextBoard(piece,1,-1)
+        if piece.color == 'B' or piece.king:
+            moves += self.nextBoard(piece,-1,1)
+            moves += self.nextBoard(piece,-1,-1)
+        return moves
+
+    def nextBoard(self,piece,i,j):
+        newI = piece.i + i
+        newJ = piece.j + j
+        if newI>7 or newI<0 or newJ>7 or newJ<0:
+            return []
+        if self.baseBoard[newI][newJ] == '-':
+            clone = deepcopy(self)
+            arr = clone.whitePieces if piece.color == 'W' else clone.blackPieces
+            index = arr.index(piece)
+            p = arr[index]
+            clone.move(p,newI,newJ)
+            return [clone]
+        if self.validAttack(piece,i,j):
+            clone = deepcopy(self)
+            arr = clone.whitePieces if piece.color == 'W' else clone.blackPieces
+            index = arr.index(piece)
+            p = arr[index]
+            clone.attack(p,i,j)
+            while(clone.validAttack(p, i, j)):
+                clone.attack(p,i,j)
+            return [clone]
+        else:
+            return []
+    def attack (self,piece,i,j):
+        deli = piece.i + i
+        delj = piece.j + j
+        self.move(piece,piece.i+i*2,piece.j+j*2)
+        arr = self.whitePieces if piece.color == 'B' else self.blackPieces
+        index = arr.index(self.baseBoard[deli][delj])
+        self.baseBoard[deli][delj] = '-'
+        del arr[index]
+
+    def validAttack(self,piece,i,j):
+        newI = piece.i + i
+        newJ = piece.j + j
+        if newI>7 or newI<0 or newJ>7 or newJ<0:
+            return False
+        if piece.opposite(self.baseBoard[piece.i + i][piece.j + j]):
+            return self.baseBoard[piece.i + (i*2)][piece.j + (j*2)] == '-'
+        return False
+    def move(self,piece,i,j):
+        self.baseBoard[piece.i][piece.j], self.baseBoard[i][j] = self.baseBoard[i][j], self.baseBoard[piece.i][piece.j]
+        piece.i = i
+        piece.j = j
+        
+
+
+
+test = Board()
+test.display()
+# print(test.whitePieces)
+# print(test.blackPieces)
+
+# test.display()
+# print(test.whitePieces[0].opposite(test.blackPieces[0]))
+
+# print(test.whitePieces[0].opposite(test.whitePieces[0]))
+white = test.whitePieces[10]
+black = test.blackPieces[0]
+test.move(white,3,4)
+test.move(black,4,3)
+test.move(test.blackPieces[8],6,0)
+test.move(test.blackPieces[1],5,0)
+test.display()
+
+moves = test.nextBoard(white,1,-1)
+for move in moves:
+    move.display()
+# test.display()
+# test.display()
+# moves = test.getChildren(test.whitePieces[10])
+# for move in moves:
+#     print("\n")
+#     move.display()
+
+
+
+
+
