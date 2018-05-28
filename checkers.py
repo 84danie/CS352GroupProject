@@ -262,22 +262,54 @@ class UI(tk.Frame):
     master = tk.Tk()
     chosen = None
     marked = None
+    midCombo = False
     
     
     def __init__(self, board, master=None):
        tk.Frame.__init__(self, master)
        self.board = board
        self._btn_matrix = []
+       self._sts_matrix = [[0 for x in range(8)] for y in range(8)]
        self.grid()
+
+    def checkForCombo(self, status):
+        if(status == "K"):
+            if(self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]],-1,-1) or self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]],-1,1)
+               or self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]],1,-1) or self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]],1,1)):
+                return True
+            else:
+                return False
+        else:
+            if(self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]],-1,-1) or self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]],-1,1)):
+                return True
+            else:
+                return False
 
     def markThis(self, row, column):
         if(UI.chosen == None):
-            if(isinstance(self.board.baseBoard[column][row], Piece)):
-                print(self.board.baseBoard[0][1].color)
+            if(isinstance(self.board.baseBoard[row][column], Piece)):
+                print(self.board.baseBoard[row][column].color)
             else:
-                print(self.board.baseBoard[column][row])
+                print(self.board.baseBoard[row][column])
         else:
-            print(str(row) + " " + str(column))
+            if(self._sts_matrix[UI.chosen[0]][UI.chosen[1]] == "K"):
+                if(UI.chosen[0] == row - 1 and UI.chosen[1] == column - 1 or UI.chosen[0] == row + 1 and UI.chosen[1] == column - 1 or UI.chosen[0] == row - 1 and UI.chosen[1] == column + 1 or UI.chosen[0] == row + 1 and UI.chosen[1] == column + 1):
+                    self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
+                    if(isinstance(self.board.baseBoard[row][column], Piece)):
+                        if(self.board.baseBoard[row][column].color == "W"):
+                            if(self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0]))
+                                self.board.attack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0])
+                            if(checkForCombo("K")):
+                                midCombo = True
+                            else:
+                                midCombo = False
+                            print(self.board.baseBoard[row][column].color)
+                    else:
+                        print(self.board.baseBoard[row][column])
+                        self.board.move(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], row, column)
+            else:
+
+            self.refreshGraphics()
         
     def selectThis(self, row, column):
         if(UI.chosen == None):
@@ -294,12 +326,11 @@ class UI(tk.Frame):
         blackPiece = tk.PhotoImage(file="black.gif")
         redPiece = tk.PhotoImage(file="red.gif")
         emptySpot = tk.PhotoImage(file = "empty.gif")
-        self.grid()
         for x in range(8):
             row_matrix = []
             for y in range(8):
-                if(isinstance(self.board.baseBoard[y][x], Piece)):
-                    if(self.board.baseBoard[y][x].color == "B"):
+                if(isinstance(self.board.baseBoard[x][y], Piece)):
+                    if(self.board.baseBoard[x][y].color == "B"):
                         quitButton = tk.Button(self, image = blackPiece, command=lambda row=x, column=y: self.selectThis(row, column))
                         quitButton.image = blackPiece
                     else:
@@ -309,7 +340,7 @@ class UI(tk.Frame):
                     quitButton = tk.Button(self, image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
                     quitButton.image = emptySpot
                 row_matrix.append(quitButton)
-                quitButton.grid(column=x, row=y, sticky="wens")
+                quitButton.grid(column=y, row=x, sticky="wens")
             self._btn_matrix.append(row_matrix)
         #for x in range(8):
         #    for y in range(8):
@@ -324,8 +355,22 @@ class UI(tk.Frame):
         #            quitButton = tk.Button(self, image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
         #            quitButton.image = emptySpot
         #        quitButton.grid(column=x, row=y, sticky="wens")
-
-
+    def refreshGraphics(self):
+        blackPiece = tk.PhotoImage(file="black.gif")
+        redPiece = tk.PhotoImage(file="red.gif")
+        emptySpot = tk.PhotoImage(file = "empty.gif")
+        for x in range(8):
+            for y in range(8):
+                if(isinstance(self.board.baseBoard[x][y], Piece)):
+                    if(self.board.baseBoard[x][y].color == "B"):
+                        self._btn_matrix[x][y].configure(image = blackPiece, command=lambda row=x, column=y: self.selectThis(row, column))
+                        self._btn_matrix[x][y].image = blackPiece
+                    else:
+                        self._btn_matrix[x][y].configure(image = redPiece, command=lambda row=x, column=y: self.markThis(row, column))
+                        self._btn_matrix[x][y].image = redPiece
+                else:
+                    self._btn_matrix[x][y].configure(image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
+                    self._btn_matrix[x][y].image = emptySpot
     
     #def changePLACES(self):
      #   uwu = children
