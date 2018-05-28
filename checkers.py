@@ -261,17 +261,17 @@ class Board:
 class UI(tk.Frame):
     master = tk.Tk()
     
-    #def __init__(self, master=None):
-    #    tk.Frame.__init__(self, master)
-    #    self.grid()
+    def __init__(self, master=None):
+       tk.Frame.__init__(self, master)
+       self.grid()
 
-    def printHOHO():
+    def printHOHO(self):
         print("HOHO!")
 
-    def printHEHE():
+    def printHEHE(self):
         print("HEHE!")
 
-    def printSK():
+    def printSK(self):
         print("SKWUMP!")
 
     def createWidgets(self, board):
@@ -284,13 +284,13 @@ class UI(tk.Frame):
             for y in range(8):
                 if(isinstance(board.baseBoard[y][x], Piece)):
                     if(board.baseBoard[y][x].color == "W"):
-                        quitButton = tk.Button(self, image = redPiece, command=printHOHO)
+                        quitButton = tk.Button(self, image = redPiece, command=self.printHOHO)
                         quitButton.image = redPiece
                     else:
-                        quitButton = tk.Button(self, image = blackPiece, command=printHEHE)
+                        quitButton = tk.Button(self, image = blackPiece, command=self.printHEHE)
                         quitButton.image = blackPiece
                 else:
-                    quitButton = tk.Button(self, image = emptySpot, command=printSK)
+                    quitButton = tk.Button(self, image = emptySpot, command=self.printSK)
                     quitButton.image = emptySpot
                 quitButton.grid(column=x, row=y, sticky="wens")
 
@@ -318,13 +318,13 @@ guitest = UI()
 # test.move(test.blackPieces[0],2,2)
 # test.blackPieces[0].kingMe()
 # test.move(test.blackPieces[1],5,0)
-test.display()
+# test.display()
 guitest.master.title('Uwu')
-#guitest.mainloop()
 guitest.createWidgets(test)
+guitest.mainloop()
 
-(val, test2) = miniMax(test, 3, False, lambda x: 1)
-test2.display()
+# (val, test2) = miniMax(test, 3, False, lambda x: 1)
+# test2.display()
 
 # moves = test.getChildren()
 # for move in moves:
