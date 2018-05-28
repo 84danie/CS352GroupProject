@@ -264,7 +264,7 @@ class UI(tk.Frame):
     marked = None
     
     
-    def __init__(self, master=None, board):
+    def __init__(self, board, master=None):
        tk.Frame.__init__(self, master)
        self.board = board
        self.grid()
