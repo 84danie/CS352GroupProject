@@ -264,20 +264,24 @@ class UI(tk.Frame):
     marked = None
     
     
-    def __init__(self, master=None):
+    def __init__(self, master=None, board):
        tk.Frame.__init__(self, master)
+       self.board = board
        self.grid()
 
     def markThis(self, row, column):
-        print(str(row) + " " + str(column))
+        if(UI.chosen == None):
+            print(board.baseBoard[0][1].color)
+        else:
+            print(str(row) + " " + str(column))
         
-    def selectThis(self, row, column):
+    def selectThis(self, row, column, board):
         if(UI.chosen == None):
             UI.chosen = [row, column]
             print("Player piece selected: "+ str(UI.chosen[0]) + " " + str(UI.chosen[1]))
         else:
-            UI.chosen = None
-            print("New piece selected, changing focus to: " + str(row) + " " + str(column))
+            UI.chosen = [row, column]
+            print("New piece selected, changing focus to: " + str(UI.chosen[0]) + " " + str(UI.chosen[1]))
 
     def createWidgets(self, board):
         blackPiece = tk.PhotoImage(file="black.gif")
@@ -286,8 +290,8 @@ class UI(tk.Frame):
         self.grid()
         for x in range(8):
             for y in range(8):
-                if(isinstance(board.baseBoard[y][x], Piece)):
-                    if(board.baseBoard[y][x].color == "B"):
+                if(isinstance(self.board.baseBoard[y][x], Piece)):
+                    if(self.board.baseBoard[y][x].color == "B"):
                         quitButton = tk.Button(self, image = blackPiece, command=lambda row=x, column=y: self.selectThis(row, column))
                         quitButton.image = blackPiece
                     else:
@@ -304,7 +308,7 @@ class UI(tk.Frame):
      #   uwu = children
 
 test = Board()
-guitest = UI()
+guitest = UI(test)
 # test.display()
 # print(test.whitePieces)
 # print(test.blackPieces)
@@ -323,7 +327,7 @@ guitest = UI()
 # test.blackPieces[0].kingMe()
 # test.move(test.blackPieces[1],5,0)
 # test.display()
-guitest.master.title('Uwu')
+guitest.master.title('Checkers')
 guitest.createWidgets(test)
 guitest.mainloop()
 
