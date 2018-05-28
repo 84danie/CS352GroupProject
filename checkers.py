@@ -282,10 +282,12 @@ class UI(tk.Frame):
     def selectThis(self, row, column):
         if(UI.chosen == None):
             UI.chosen = [row, column]
-            self.config(relief=SUNKEN)
+            self._btn_matrix[row][column].config(relief='sunken')
             print("Player piece selected: "+ str(UI.chosen[0]) + " " + str(UI.chosen[1]))
         else:
+            self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
             UI.chosen = [row, column]
+            self._btn_matrix[row][column].config(relief='sunken')
             print("New piece selected, changing focus to: " + str(UI.chosen[0]) + " " + str(UI.chosen[1]))
 
     def createWidgets(self):
@@ -294,6 +296,7 @@ class UI(tk.Frame):
         emptySpot = tk.PhotoImage(file = "empty.gif")
         self.grid()
         for x in range(8):
+            row_matrix = []
             for y in range(8):
                 if(isinstance(self.board.baseBoard[y][x], Piece)):
                     if(self.board.baseBoard[y][x].color == "B"):
@@ -305,7 +308,22 @@ class UI(tk.Frame):
                 else:
                     quitButton = tk.Button(self, image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
                     quitButton.image = emptySpot
+                row_matrix.append(quitButton)
                 quitButton.grid(column=x, row=y, sticky="wens")
+            self._btn_matrix.append(row_matrix)
+        #for x in range(8):
+        #    for y in range(8):
+        #        if(isinstance(self.board.baseBoard[y][x], Piece)):
+        #            if(self.board.baseBoard[y][x].color == "B"):
+        #                quitButton = tk.Button(self, image = blackPiece, command=lambda row=x, column=y: self.selectThis(row, column))
+        #                quitButton.image = blackPiece
+        #            else:
+        #                quitButton = tk.Button(self, image = redPiece, command=lambda row=x, column=y: self.markThis(row, column))
+        #                quitButton.image = redPiece
+        #        else:
+        #            quitButton = tk.Button(self, image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
+        #            quitButton.image = emptySpot
+        #        quitButton.grid(column=x, row=y, sticky="wens")
 
 
     
