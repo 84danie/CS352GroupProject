@@ -268,19 +268,16 @@ class UI(tk.Frame):
        tk.Frame.__init__(self, master)
        self.grid()
 
-    def printHOHO(self):
-        print("HOHO!")
-
-    def printHEHE(self):
-        print("HEHE!")
-
-    def printSK(self):
-        print("SKWUMP!")
-
     def markThis(self, row, column):
         print(str(row) + " " + str(column))
+        
     def selectThis(self, row, column):
-        print(str(row) + " " + str(column))
+        if(UI.chosen == None):
+            UI.chosen = [row, column]
+            print("Player piece selected: "+ str(UI.chosen[0]) + " " + str(UI.chosen[1]))
+        else:
+            UI.chosen = None
+            print("New piece selected, changing focus to: " + str(row) + " " + str(column))
 
     def createWidgets(self, board):
         blackPiece = tk.PhotoImage(file="black.gif")
