@@ -267,23 +267,28 @@ class UI(tk.Frame):
     def __init__(self, board, master=None):
        tk.Frame.__init__(self, master)
        self.board = board
+       self._btn_matrix = []
        self.grid()
 
     def markThis(self, row, column):
         if(UI.chosen == None):
-            print(board.baseBoard[0][1].color)
+            if(isinstance(self.board.baseBoard[column][row], Piece)):
+                print(self.board.baseBoard[0][1].color)
+            else:
+                print(self.board.baseBoard[column][row])
         else:
             print(str(row) + " " + str(column))
         
-    def selectThis(self, row, column, board):
+    def selectThis(self, row, column):
         if(UI.chosen == None):
             UI.chosen = [row, column]
+            self.config(relief=SUNKEN)
             print("Player piece selected: "+ str(UI.chosen[0]) + " " + str(UI.chosen[1]))
         else:
             UI.chosen = [row, column]
             print("New piece selected, changing focus to: " + str(UI.chosen[0]) + " " + str(UI.chosen[1]))
 
-    def createWidgets(self, board):
+    def createWidgets(self):
         blackPiece = tk.PhotoImage(file="black.gif")
         redPiece = tk.PhotoImage(file="red.gif")
         emptySpot = tk.PhotoImage(file = "empty.gif")
@@ -328,7 +333,7 @@ guitest = UI(test)
 # test.move(test.blackPieces[1],5,0)
 # test.display()
 guitest.master.title('Checkers')
-guitest.createWidgets(test)
+guitest.createWidgets()
 guitest.mainloop()
 
 # (val, test2) = miniMax(test, 3, False, lambda x: 1)
