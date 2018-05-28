@@ -260,6 +260,9 @@ class Board:
 
 class UI(tk.Frame):
     master = tk.Tk()
+    chosen = None
+    marked = None
+    
     
     def __init__(self, master=None):
        tk.Frame.__init__(self, master)
@@ -274,23 +277,27 @@ class UI(tk.Frame):
     def printSK(self):
         print("SKWUMP!")
 
+    def markThis(self, row, column):
+        print(str(row) + " " + str(column))
+    def selectThis(self, row, column):
+        print(str(row) + " " + str(column))
+
     def createWidgets(self, board):
         blackPiece = tk.PhotoImage(file="black.gif")
         redPiece = tk.PhotoImage(file="red.gif")
         emptySpot = tk.PhotoImage(file = "empty.gif")
-        frame = tk.Frame
         self.grid()
         for x in range(8):
             for y in range(8):
                 if(isinstance(board.baseBoard[y][x], Piece)):
-                    if(board.baseBoard[y][x].color == "W"):
-                        quitButton = tk.Button(self, image = redPiece, command=self.printHOHO)
-                        quitButton.image = redPiece
-                    else:
-                        quitButton = tk.Button(self, image = blackPiece, command=self.printHEHE)
+                    if(board.baseBoard[y][x].color == "B"):
+                        quitButton = tk.Button(self, image = blackPiece, command=lambda row=x, column=y: self.selectThis(row, column))
                         quitButton.image = blackPiece
+                    else:
+                        quitButton = tk.Button(self, image = redPiece, command=lambda row=x, column=y: self.markThis(row, column))
+                        quitButton.image = redPiece
                 else:
-                    quitButton = tk.Button(self, image = emptySpot, command=self.printSK)
+                    quitButton = tk.Button(self, image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
                     quitButton.image = emptySpot
                 quitButton.grid(column=x, row=y, sticky="wens")
 
