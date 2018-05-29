@@ -1,79 +1,5 @@
 from copy import deepcopy
 import tkinter as tk
-import time
-
-#Displays a board and all current pieces
-def display(state):
-    w = 0
-    b = 0
-    baseBoard = state[BASEBOARD]
-    whitePieces = state[WHITEPIECES]
-    blackPieces = state[BLACKPIECES]
-
-    for i in range(len(baseBoard)):
-        for j in range(len(baseBoard[0])):
-            if w < len(whitePieces):
-                if whitePieces[w] == [i,j,K,WHITE]:
-                    print(" WK"," ",end="")
-                    w+=1
-                    continue
-                elif whitePieces[w] == [i,j,P,WHITE]:
-                    print(" w","  ",end="")
-                    w+=1
-                    continue
-            if b < len(blackPieces):
-                if blackPieces[b] == [i,j,K,BLACK]:
-                    print(" BK","  ",end="")
-                    b+=1
-                    continue
-                elif blackPieces[b] == [i,j,P,BLACK]:
-                    print(" b","  ",end="")
-                    b+=1
-                    continue
-            if baseBoard[i][j] == BLACK:
-                print(" #","  ",end="")
-            else:
-                print(" -","  ",end="")
-        print("\n")
-        
-def isValid(piece):
-    if piece[ROW] < 0 or piece[ROW] >= n:
-        return False
-    if piece[COL] < 0 or piece[COL] >= n:
-        return False
-    return True
-
-
-def getLeftMoves(piece):
-    moves = None
-    newPiece = [piece[ROW]+1,piece[COL]-1,piece[TYPE]]
-    if isValid(newPiece):
-        moves.append[newPiece]
-    if piece[TYPE] == K:
-        newPiece = [piece[ROW]-1,piece[COL]-1,piece[TYPE]]
-    pass
-
-def getRightMoves(piece):
-    pass
-
-def getMoves(piece):
-    return getLeftMoves(piece)+getRightMoves(piece)
-
-#Get all possile moves that could be made in a given state
-def getChildren(node,maxPlayer):
-    children = []
-    currentPlayer = None
-    otherPlayer = None
-    if maxPlayer == True:
-        currentPlayer = node[BLACKPIECES]
-        otherPlayer = node[WHITEPIECES]
-    else:
-        currentPlayer = node[WHITEPIECES]
-        otherPlayer = node[BLACKPIECES]
-
-    for piece in currentPlayer:
-        children.append[getMoves(piece,otherPlayer)]
-
 
 #Get the heuristic value of a given state
 def earlyGameHeuristic(node):
@@ -87,12 +13,6 @@ def earlyGameHeuristic(node):
     return v
 
 def heuristic(node):
-    # early = False
-    # for piece in node.whitePieces
-    #     if not piece.king:
-    #         break
-    # for piece in node.whitePieces
-    #     if not pieces.king break
     return earlyGameHeuristic(node)
 
 #Minimax algorithm for computer computer player
@@ -119,44 +39,6 @@ def miniMax(node, depth, maxPlayer, h):
                 bestMove = child
         return bestValue, bestMove
 
-
-#Board Size
-n = 8
-ROW = 0
-COL = 1
-TYPE = 2
-COLOR = 3
-
-BLACK = 0
-WHITE = 1
-#Value representing a piece as a pawn
-P = 1
-
-#Value representing a piece as a king
-K = 2
-
-#Index values for a state
-BASEBOARD = 0
-WHITEPIECES = 1
-BLACKPIECES = 2
-
-#Main Board - white = -, black = #
-baseBoard = [[ (row+col) % 2 for row in range(n)] for col in range(n)]
-
-#Pieces arrays for each player; white locations are hardcoded, black locations
-#are the opposite of the white locations initially
-whitePieces = [[0,0,P,WHITE],[0,2,P,WHITE],[0,4,P,WHITE],[0,6,P,WHITE],
-               [1,1,P,WHITE],[1,3,P,WHITE],[1,5,P,WHITE],[1,7,P,WHITE],
-               [2,0,P,WHITE],[2,2,P,WHITE],[2,4,P,WHITE],[2,6,P,WHITE]]
-
-blackPieces = sorted(list(map(lambda x: [n-x[ROW]-1,n-x[COL]-1,P,BLACK],whitePieces )))
-
-initialState = [baseBoard, whitePieces, blackPieces]
-
-#Display the initial board
-# display(initialState)
-
-#JORGE START HERE
 class Piece:
     def __init__(self, color, i, j):
         self.i = i
@@ -375,19 +257,7 @@ class UI(tk.Frame):
                 row_matrix.append(quitButton)
                 quitButton.grid(row=x, column=y, sticky="wens")
             self._btn_matrix.append(row_matrix)
-        #for x in range(8):
-        #    for y in range(8):
-        #        if(isinstance(self.board.baseBoard[y][x], Piece)):
-        #            if(self.board.baseBoard[y][x].color == "B"):
-        #                quitButton = tk.Button(self, image = blackPiece, command=lambda row=x, column=y: self.selectThis(row, column))
-        #                quitButton.image = blackPiece
-        #            else:
-        #                quitButton = tk.Button(self, image = redPiece, command=lambda row=x, column=y: self.markThis(row, column))
-        #                quitButton.image = redPiece
-        #        else:
-        #            quitButton = tk.Button(self, image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
-        #            quitButton.image = emptySpot
-        #        quitButton.grid(column=x, row=y, sticky="wens")
+
     def refreshGraphics(self):
         blackPiece = tk.PhotoImage(file="black.gif")
         redPiece = tk.PhotoImage(file="red.gif")
@@ -430,44 +300,8 @@ class UI(tk.Frame):
     
 
 
-test = Board()
-guitest = UI(test)
-# test.display()
-# print(test.whitePieces)
-# print(test.blackPieces)
-
-# test.display()
-# print(test.whitePieces[0].opposite(test.blackPieces[0]))
-
-# print(test.whitePieces[0].opposite(test.whitePieces[0]))
-# white = test.whitePieces[10]
-# black = test.blackPieces[0]
-# test.move(white,3,4)
-# test.move(black,4,3)
-# test.move(test.whitePieces[0],3,3)
-# test.move(test.whitePieces[1],5,5)
-# test.move(test.blackPieces[0],2,2)
-# test.blackPieces[0].kingMe()
-# test.move(test.blackPieces[1],5,0)
-# test.display()
-guitest.master.title('Checkers')
-guitest.createWidgets()
-guitest.mainloop()
-
-# (val, test2) = miniMax(test, 3, False, lambda x: 1)
-# test2.display()
-
-# moves = test.getChildren()
-# for move in moves:
-#     move.display()
-# test.display()
-# test.display()
-# moves = test.getChildren(test.whitePieces[10])
-# for move in moves:
-#     print("\n")
-#     move.display()
-
-
-
-
-
+b = Board()
+gui = UI(b)
+gui.master.title('Checkers')
+gui.createWidgets()
+gui.mainloop()
