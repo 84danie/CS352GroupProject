@@ -324,7 +324,7 @@ class UI(tk.Frame):
                     if len(states)==1:
                         self.board = states[0]
                     self.refreshGraphics()
-                    (val, nextBoard) = miniMax(self.board, 3, True, lambda x: 1)
+                    (val, nextBoard) = miniMax(self.board, 3, True, heuristic)
                     self.board = nextBoard
                     self.refreshGraphics()
 
