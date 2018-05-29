@@ -1,3 +1,14 @@
+'''
+Joshua Camacho
+Jorge Carrera
+Danielle Holzberger
+
+Group Name: The Overachievers
+
+CS 352 - Dr. Yang
+Group Programming Assignment - Checkers AI
+'''
+
 from copy import deepcopy
 import tkinter as tk
 
