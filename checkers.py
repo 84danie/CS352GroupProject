@@ -1,5 +1,6 @@
 from copy import deepcopy
 import tkinter as tk
+import time
 
 #Displays a board and all current pieces
 def display(state):
@@ -305,66 +306,28 @@ class UI(tk.Frame):
         
 
     def markThis(self, row, column):
+        print("got here")
         if(UI.chosen == None):
+            print("ui chosen is none")
             if(isinstance(self.board.baseBoard[row][column], Piece)):
                 print(self.board.baseBoard[row][column].color)
             else:
                 print(self.board.baseBoard[row][column])
         else:
-            if(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]].king):
-                if(UI.chosen[0] == row - 1 and UI.chosen[1] == column - 1 or UI.chosen[0] == row + 1 and UI.chosen[1] == column - 1 or UI.chosen[0] == row - 1 and UI.chosen[1] == column + 1 or UI.chosen[0] == row + 1 and UI.chosen[1] == column + 1):
-                    self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
-                    if(isinstance(self.board.baseBoard[row][column], Piece)):
-                        if(self.board.baseBoard[row][column].color == "W"):
-                            if(self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0])):
-                                self.board.attack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0])
-                                UI.chosen = [(UI.chosen[0]+(row - UI.chosen[0])*2),(UI.chosen[1]+(column - UI.chosen[1])*2)]
-                            if(self.checkForCombo()):
-                                UI.midCombo = True
-                                self.refreshGraphics()
-                            else:
-                                UI.midCombo = False
-                                (val, next) = miniMax(self.board, 3, True, lambda x: 1)
-                                self.board = next
-                                self.refreshGraphics()
-                            #print(self.board.baseBoard[row][column].color)
-                    elif(UI.midCombo is False):
-                        print(self.board.baseBoard[row][column])
-                        self.board.move(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], row, column)
-                        (val, next) = miniMax(self.board, 3, True, lambda x: 1)
-                        self.board = next
-                        self.refreshGraphics()
-            else:
-                if(UI.chosen[0] == row + 1 and UI.chosen[1] == column - 1 or UI.chosen[0] == row + 1 and UI.chosen[1] == column + 1):
-                    self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
-                    if(isinstance(self.board.baseBoard[row][column], Piece)):
-                        if(self.board.baseBoard[row][column].color == "W"):
-                            if(self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0])):
-                                self.board.attack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0])
-                                UI.chosen = [(UI.chosen[0]+(row - UI.chosen[0])*2),(UI.chosen[1]+(column - UI.chosen[1])*2)]
-                                print("chosen at: "+str((UI.chosen[0]+ (row - UI.chosen[0]*2)))+" "+str((UI.chosen[1]+(column - UI.chosen[1]*2))))
-                            if(self.checkForCombo()):
-                                UI.midCombo = True
-                                self.refreshGraphics()
-                            else:
-                                UI.midCombo = False
-                                (val, next) = miniMax(self.board, 3, True, lambda x: 1)
-                                self.board = next
-                                self.refreshGraphics()
-                            #print(self.board.baseBoard[row][column].color)
-                    elif(UI.midCombo is False):
-                        print(self.board.baseBoard[row][column])
-                        self.board.move(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], row, column)
-                        (val, next) = miniMax(self.board, 3, True, lambda x: 1)
-                        self.board = next
-                        self.refreshGraphics()
-                    if(UI.chosen[0] == 0):
-                        self._sts_matrix[UI.chosen[0]][UI.chosen[1]] = "K"
-            #if(UI.midCombo is False):
-            #    (val, next) = miniMax(self.board, 3, True, lambda x: 1)
-            #    self.board = next
-            #self.refreshStates()
-            #self.refreshGraphics()
+            slope = abs((UI.chosen[0] - row) / (UI.chosen[1] - column))
+            if(slope == 1):
+                self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
+                if(isinstance(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], Piece)):
+                    i = row - UI.chosen[0]
+                    j = column - UI.chosen[1]
+                    states = self.board.nextBoard(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], i, j)
+                    if len(states)==1:
+                        self.board = states[0]
+                    self.refreshGraphics()
+                    (val, nextBoard) = miniMax(self.board, 3, True, lambda x: 1)
+                    self.board = nextBoard
+                    self.refreshGraphics()
+
         
     def selectThis(self, row, column):
         if(UI.chosen == None):
