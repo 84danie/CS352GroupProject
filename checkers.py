@@ -322,10 +322,14 @@ class UI(tk.Frame):
                                 UI.midCombo = True
                             else:
                                 UI.midCombo = False
-                            print(self.board.baseBoard[row][column].color)
+                                (val, next) = miniMax(self.board, 3, True, lambda x: 1)
+                                self.board = next
+                            #print(self.board.baseBoard[row][column].color)
                     elif(UI.midCombo is False):
                         print(self.board.baseBoard[row][column])
                         self.board.move(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], row, column)
+                        (val, next) = miniMax(self.board, 3, True, lambda x: 1)
+                        self.board = next
             else:
                 if(UI.chosen[0] == row + 1 and UI.chosen[1] == column - 1 or UI.chosen[0] == row + 1 and UI.chosen[1] == column + 1):
                     self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
@@ -338,15 +342,19 @@ class UI(tk.Frame):
                                 UI.midCombo = True
                             else:
                                 UI.midCombo = False
-                            print(self.board.baseBoard[row][column].color)
+                                (val, next) = miniMax(self.board, 3, True, lambda x: 1)
+                                self.board = next
+                            #print(self.board.baseBoard[row][column].color)
                     elif(UI.midCombo is False):
                         print(self.board.baseBoard[row][column])
                         self.board.move(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], row, column)
+                        (val, next) = miniMax(self.board, 3, True, lambda x: 1)
+                        self.board = next
                     if(UI.chosen[0] == 0):
                         self._sts_matrix[UI.chosen[0]][UI.chosen[1]] = "K"
-            if(UI.midCombo is False):
-                (val, next) = miniMax(self.board, 3, True, lambda x: 1)
-                self.board = next
+            #if(UI.midCombo is False):
+            #    (val, next) = miniMax(self.board, 3, True, lambda x: 1)
+            #    self.board = next
             self.refreshGraphics()
         
     def selectThis(self, row, column):
