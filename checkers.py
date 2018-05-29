@@ -12,12 +12,11 @@ def earlyGameHeuristic(node):
         v = v - 2 if not piece.king and piece.i > 5 else v
     return v
 
+#Heuristic function of a node
 def heuristic(node):
     return earlyGameHeuristic(node)
 
 #Minimax algorithm for computer computer player
-#since checkers is a zero-sum game, the max player's
-#cost is equal to the negation of the min player's cost
 def miniMax(node, depth, maxPlayer, h):
     if depth == 0 or not node.getChildren():
         return h(node),node
@@ -26,7 +25,7 @@ def miniMax(node, depth, maxPlayer, h):
         bestValue = -10000000000
         for child in node.getChildren("W"):
             (newVal, move) = miniMax(child,depth-1,False,h)
-            if newVal > bestValue:
+            if newVal > bestValue: #Maximize Value
                 bestValue = newVal
                 bestMove = child
         return bestValue, bestMove
@@ -34,11 +33,12 @@ def miniMax(node, depth, maxPlayer, h):
         bestValue = 10000000000
         for child in node.getChildren():
             (newVal, move) = miniMax(child,depth-1,True,h)
-            if newVal < bestValue:
+            if newVal < bestValue: #Minimize Value
                 bestValue = newVal
                 bestMove = child
         return bestValue, bestMove
 
+#Class representing a single Piece
 class Piece:
     def __init__(self, color, i, j):
         self.i = i
@@ -58,6 +58,7 @@ class Piece:
             return self.i == other.i and self.j == other.j
         return False
 
+#Class representing an entire check board
 class Board:
     def __init__(self):
         n = 8
@@ -129,7 +130,7 @@ class Board:
             clone.move(p,newI,newJ)
             return [clone]
         return []
-    
+
     def attack (self,piece,i,j):
         deli = piece.i + i
         delj = piece.j + j
@@ -147,7 +148,7 @@ class Board:
         if piece.opposite(self.baseBoard[piece.i + i][piece.j + j]):
             return self.baseBoard[piece.i + (i*2)][piece.j + (j*2)] == '-'
         return False
-    
+
     def move(self,piece,i,j):
         self.baseBoard[piece.i][piece.j], self.baseBoard[i][j] = self.baseBoard[i][j], self.baseBoard[piece.i][piece.j]
         piece.i = i
@@ -157,13 +158,14 @@ class Board:
         if piece.color == 'B' and i == 0:
             piece.kingMe()
 
+#GUI Code
 class UI(tk.Frame):
     master = tk.Tk()
     chosen = None
     marked = None
     midCombo = False
-    
-    
+
+
     def __init__(self, board, master=None):
        tk.Frame.__init__(self, master)
        self.board = board
@@ -183,9 +185,6 @@ class UI(tk.Frame):
                 return True
             else:
                 return False
-
-    #def refreshStates(self):
-        
 
     def markThis(self, row, column):
         print("got here")
@@ -211,7 +210,7 @@ class UI(tk.Frame):
                     self.board = nextBoard
                     self.refreshGraphics()
 
-        
+
     def selectThis(self, row, column):
         if(UI.chosen == None):
             UI.chosen = [row, column]
@@ -297,9 +296,8 @@ class UI(tk.Frame):
                         else:
                             self._btn_matrix[x][y].configure(image = emptySpot2, command=lambda row=x, column=y: self.markThis(row, column))
                             self._btn_matrix[x][y].image = emptySpot2
-    
 
-
+#Main program
 b = Board()
 gui = UI(b)
 gui.master.title('Checkers')
