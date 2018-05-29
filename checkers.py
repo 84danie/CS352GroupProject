@@ -321,8 +321,9 @@ class UI(tk.Frame):
                     i = row - UI.chosen[0]
                     j = column - UI.chosen[1]
                     states = self.board.nextBoard(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], i, j)
-                    if len(states)==1:
-                        self.board = states[0]
+                    if not states:
+                        return
+                    self.board = states[0]
                     self.refreshGraphics()
                     (val, nextBoard) = miniMax(self.board, 3, True, heuristic)
                     self.board = nextBoard
