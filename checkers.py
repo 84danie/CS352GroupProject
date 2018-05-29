@@ -98,12 +98,12 @@ def heuristic(node):
 #since checkers is a zero-sum game, the max player's
 #cost is equal to the negation of the min player's cost
 def miniMax(node, depth, maxPlayer, h):
-    if depth == 0 or not node.getChildren(node):
+    if depth == 0 or not node.getChildren():
         return h(node),node
     bestMove = None
     if maxPlayer == True:
         bestValue = -10000000000
-        for child in node.getChildren(node, "B"):
+        for child in node.getChildren( "B"):
             (newVal, move) = miniMax(child,depth-1,False,h)
             if newVal > bestValue:
                 bestValue = newVal
@@ -111,7 +111,7 @@ def miniMax(node, depth, maxPlayer, h):
         return bestValue, bestMove
     else:
         bestValue = 10000000000
-        for child in node.getChildren(node):
+        for child in node.getChildren():
             (newVal, move) = miniMax(child,depth-1,False,h)
             if newVal < bestValue:
                 bestValue = newVal
@@ -313,18 +313,40 @@ class UI(tk.Frame):
                     self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
                     if(isinstance(self.board.baseBoard[row][column], Piece)):
                         if(self.board.baseBoard[row][column].color == "W"):
-                            if(self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0]))
+                            if(self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0])):
                                 self.board.attack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0])
-                            if(checkForCombo("K")):
-                                midCombo = True
+                                UI.chosen = [(UI.chosen[0]+(row - UI.chosen[0])*2),(UI.chosen[1]+(column - UI.chosen[1])*2)]
+                                self._sts_matrix[UI.chosen[0]][UI.chosen[1]] = "O"
+                                seld._sts_matrix[(UI.chosen[0]+(row - UI.chosen[0])*2)][(UI.chosen[1]+(column - UI.chosen[1])*2)] = "K"
+                            if(self.checkForCombo("K")):
+                                UI.midCombo = True
                             else:
-                                midCombo = False
+                                UI.midCombo = False
                             print(self.board.baseBoard[row][column].color)
-                    else:
+                    elif(UI.midCombo is False):
                         print(self.board.baseBoard[row][column])
                         self.board.move(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], row, column)
             else:
-
+                if(UI.chosen[0] == row + 1 and UI.chosen[1] == column - 1 or UI.chosen[0] == row + 1 and UI.chosen[1] == column + 1):
+                    self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
+                    if(isinstance(self.board.baseBoard[row][column], Piece)):
+                        if(self.board.baseBoard[row][column].color == "W"):
+                            if(self.board.validAttack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0])):
+                                self.board.attack(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], column - UI.chosen[1], row - UI.chosen[0])
+                                UI.chosen = [(UI.chosen[0]+(row - UI.chosen[0])*2),(UI.chosen[1]+(column - UI.chosen[1])*2)]
+                            if(self.checkForCombo("O")):
+                                UI.midCombo = True
+                            else:
+                                UI.midCombo = False
+                            print(self.board.baseBoard[row][column].color)
+                    elif(UI.midCombo is False):
+                        print(self.board.baseBoard[row][column])
+                        self.board.move(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], row, column)
+                    if(UI.chosen[0] == 0):
+                        self._sts_matrix[UI.chosen[0]][UI.chosen[1]] = "K"
+            if(UI.midCombo is False):
+                (val, next) = miniMax(self.board, 3, True, lambda x: 1)
+                self.board = next
             self.refreshGraphics()
         
     def selectThis(self, row, column):
@@ -332,7 +354,7 @@ class UI(tk.Frame):
             UI.chosen = [row, column]
             self._btn_matrix[row][column].config(relief='sunken')
             print("Player piece selected: "+ str(UI.chosen[0]) + " " + str(UI.chosen[1]))
-        else:
+        elif(UI.midCombo is False):
             self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
             UI.chosen = [row, column]
             self._btn_matrix[row][column].config(relief='sunken')
@@ -356,7 +378,7 @@ class UI(tk.Frame):
                     quitButton = tk.Button(self, image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
                     quitButton.image = emptySpot
                 row_matrix.append(quitButton)
-                quitButton.grid(column=y, row=x, sticky="wens")
+                quitButton.grid(row=x, column=y, sticky="wens")
             self._btn_matrix.append(row_matrix)
         #for x in range(8):
         #    for y in range(8):
