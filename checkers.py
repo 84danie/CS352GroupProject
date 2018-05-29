@@ -393,15 +393,25 @@ class UI(tk.Frame):
         redPiece = tk.PhotoImage(file="red.gif")
         emptySpot = tk.PhotoImage(file = "empty.gif")
         emptySpot2 = tk.PhotoImage(file = "empty2.gif")
+        bKing = tk.PhotoImage(file="blackKing.gif")
+        rKing = tk.PhotoImage(file="redKing.gif")
         for x in range(8):
             for y in range(8):
                 if(isinstance(self.board.baseBoard[x][y], Piece)):
                     if(self.board.baseBoard[x][y].color == "B"):
-                        self._btn_matrix[x][y].configure(image = blackPiece, command=lambda row=x, column=y: self.selectThis(row, column))
-                        self._btn_matrix[x][y].image = blackPiece
+                        if(self.board.baseBoard[x][y].king):
+                            self._btn_matrix[x][y].configure(image = bKing, command=lambda row=x, column=y: self.selectThis(row, column))
+                            self._btn_matrix[x][y].image = bKing
+                        else:
+                            self._btn_matrix[x][y].configure(image = blackPiece, command=lambda row=x, column=y: self.selectThis(row, column))
+                            self._btn_matrix[x][y].image = blackPiece
                     else:
-                        self._btn_matrix[x][y].configure(image = redPiece, command=lambda row=x, column=y: self.markThis(row, column))
-                        self._btn_matrix[x][y].image = redPiece
+                        if(self.board.baseBoard[x][y].king):
+                            self._btn_matrix[x][y].configure(image = rKing, command=lambda row=x, column=y: self.markThis(row, column))
+                            self._btn_matrix[x][y].image = rKing
+                        else:
+                            self._btn_matrix[x][y].configure(image = redPiece, command=lambda row=x, column=y: self.markThis(row, column))
+                            self._btn_matrix[x][y].image = redPiece
                 else:
                     if(x % 2 == 0):
                         if(y % 2 == 0):
