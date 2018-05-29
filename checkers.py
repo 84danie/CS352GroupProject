@@ -344,6 +344,7 @@ class UI(tk.Frame):
         blackPiece = tk.PhotoImage(file="black.gif")
         redPiece = tk.PhotoImage(file="red.gif")
         emptySpot = tk.PhotoImage(file = "empty.gif")
+        emptySpot2 = tk.PhotoImage(file = "empty2.gif")
         for x in range(8):
             row_matrix = []
             for y in range(8):
@@ -355,8 +356,21 @@ class UI(tk.Frame):
                         quitButton = tk.Button(self, image = redPiece, command=lambda row=x, column=y: self.markThis(row, column))
                         quitButton.image = redPiece
                 else:
-                    quitButton = tk.Button(self, image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
-                    quitButton.image = emptySpot
+                    if(x % 2 == 0):
+                        if(y % 2 == 0):
+                            quitButton = tk.Button(self, image = emptySpot2, command=lambda row=x, column=y: self.markThis(row, column))
+                            quitButton.image = emptySpot2
+                        else:
+                            quitButton = tk.Button(self, image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
+                            quitButton.image = emptySpot
+                    else:
+                        if(y % 2 == 0):
+                            quitButton = tk.Button(self, image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
+                            quitButton.image = emptySpot
+                        else:
+                            quitButton = tk.Button(self, image = emptySpot2, command=lambda row=x, column=y: self.markThis(row, column))
+                            quitButton.image = emptySpot2
+
                 row_matrix.append(quitButton)
                 quitButton.grid(row=x, column=y, sticky="wens")
             self._btn_matrix.append(row_matrix)
@@ -377,6 +391,7 @@ class UI(tk.Frame):
         blackPiece = tk.PhotoImage(file="black.gif")
         redPiece = tk.PhotoImage(file="red.gif")
         emptySpot = tk.PhotoImage(file = "empty.gif")
+        emptySpot2 = tk.PhotoImage(file = "empty2.gif")
         for x in range(8):
             for y in range(8):
                 if(isinstance(self.board.baseBoard[x][y], Piece)):
@@ -387,8 +402,20 @@ class UI(tk.Frame):
                         self._btn_matrix[x][y].configure(image = redPiece, command=lambda row=x, column=y: self.markThis(row, column))
                         self._btn_matrix[x][y].image = redPiece
                 else:
-                    self._btn_matrix[x][y].configure(image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
-                    self._btn_matrix[x][y].image = emptySpot
+                    if(x % 2 == 0):
+                        if(y % 2 == 0):
+                            self._btn_matrix[x][y].configure(image = emptySpot2, command=lambda row=x, column=y: self.markThis(row, column))
+                            self._btn_matrix[x][y].image = emptySpot2
+                        else:
+                            self._btn_matrix[x][y].configure(image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
+                            self._btn_matrix[x][y].image = emptySpot
+                    else:
+                        if(y % 2 == 0):
+                            self._btn_matrix[x][y].configure(image = emptySpot, command=lambda row=x, column=y: self.markThis(row, column))
+                            self._btn_matrix[x][y].image = emptySpot
+                        else:
+                            self._btn_matrix[x][y].configure(image = emptySpot2, command=lambda row=x, column=y: self.markThis(row, column))
+                            self._btn_matrix[x][y].image = emptySpot2
     
 
 
