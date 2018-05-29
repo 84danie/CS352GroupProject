@@ -314,7 +314,8 @@ class UI(tk.Frame):
             else:
                 print(self.board.baseBoard[row][column])
         else:
-            if(UI.chosen[0] == row + 1 and UI.chosen[1] == column - 1 or UI.chosen[0] == row + 1 and UI.chosen[1] == column + 1):
+            slope = abs((UI.chosen[0] - row) / (UI.chosen[1] - column))
+            if(slope == 1):
                 self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
                 if(isinstance(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], Piece)):
                     i = row - UI.chosen[0]
