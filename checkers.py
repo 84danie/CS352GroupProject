@@ -79,7 +79,7 @@ def earlyGameHeuristic(node):
     v = 0
     for piece in node.whitePieces:
         v = v + 10 if piece.king else v + 5
-        v = v + 2 if not piece.king and piece.i <  else v
+        v = v + 2 if not piece.king and piece.i < 4 else v
     for piece in node.blackPieces:
         v = v - 10 if piece.king else v - 5
         v = v - 2 if not piece.king and piece.i > 5 else v
@@ -103,7 +103,7 @@ def miniMax(node, depth, maxPlayer, h):
     bestMove = None
     if maxPlayer == True:
         bestValue = -10000000000
-        for child in node.getChildren( "B"):
+        for child in node.getChildren("W"):
             (newVal, move) = miniMax(child,depth-1,False,h)
             if newVal > bestValue:
                 bestValue = newVal
@@ -112,7 +112,7 @@ def miniMax(node, depth, maxPlayer, h):
     else:
         bestValue = 10000000000
         for child in node.getChildren():
-            (newVal, move) = miniMax(child,depth-1,False,h)
+            (newVal, move) = miniMax(child,depth-1,True,h)
             if newVal < bestValue:
                 bestValue = newVal
                 bestMove = child
