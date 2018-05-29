@@ -315,14 +315,10 @@ class UI(tk.Frame):
                 print(self.board.baseBoard[row][column])
         else:
             if(UI.chosen[0] == row + 1 and UI.chosen[1] == column - 1 or UI.chosen[0] == row + 1 and UI.chosen[1] == column + 1):
-                print("ui nonesense")
                 self._btn_matrix[UI.chosen[0]][UI.chosen[1]].config(relief='raised')
-                print("row ",row," column",column)
                 if(isinstance(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], Piece)):
-                    print("was instance")
                     i = row - UI.chosen[0]
                     j = column - UI.chosen[1]
-                    print("got here")
                     states = self.board.nextBoard(self.board.baseBoard[UI.chosen[0]][UI.chosen[1]], i, j)
                     if len(states)==1:
                         self.board = states[0]
