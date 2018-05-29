@@ -75,8 +75,24 @@ def getChildren(node,maxPlayer):
 
 
 #Get the heuristic value of a given state
+def earlyGameHeuristic(node):
+    v = 0
+    for piece in node.whitePieces:
+        v = v + 10 if piece.king else v + 5
+        v = v + 2 if not piece.king and piece.i <  else v
+    for piece in node.blackPieces:
+        v = v - 10 if piece.king else v - 5
+        v = v - 2 if not piece.king and piece.i > 5 else v
+    return v
+
 def heuristic(node):
-    pass
+    # early = False
+    # for piece in node.whitePieces
+    #     if not piece.king:
+    #         break
+    # for piece in node.whitePieces
+    #     if not pieces.king break
+    return earlyGameHeuristic(node)
 
 #Minimax algorithm for computer computer player
 #since checkers is a zero-sum game, the max player's
